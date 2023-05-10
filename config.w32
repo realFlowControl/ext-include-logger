@@ -1,0 +1,7 @@
+ARG_ENABLE('include_logger', 'include_logger support', 'no');
+
+if (PHP_INCLUDE_LOGGER != 'no') {
+	AC_DEFINE('HAVE_INCLUDE_LOGGER', 1, 'include_logger support enabled');
+
+	EXTENSION('include_logger', 'include_logger.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}
