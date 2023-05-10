@@ -5,6 +5,7 @@
 #endif
 
 #include "php.h"
+#include "Zend/zend_compile.h"
 #include "ext/standard/info.h"
 #include "php_include_logger.h"
 #include "include_logger_arginfo.h"
@@ -16,67 +17,33 @@
 	ZEND_PARSE_PARAMETERS_END()
 #endif
 
-/* {{{ void test1() */
-PHP_FUNCTION(test1)
+zend_op_array *(*prev_zend_compile_file)(zend_file_handle *file_handle, int type);
+
+zend_op_array *my_extension_compile_file(zend_file_handle *file_handle, int type)
 {
-	ZEND_PARSE_PARAMETERS_NONE();
-
-	php_printf("The extension %s is loaded and working!\r\n", "include_logger");
+	printf("Including file: %s\n\r", file_handle->filename->val);
+	return prev_zend_compile_file(file_handle, type);
 }
-/* }}} */
 
-/* {{{ string test2( [ string $var ] ) */
-PHP_FUNCTION(test2)
+PHP_MINIT_FUNCTION(include_logger)
 {
-	char *var = "World";
-	size_t var_len = sizeof("World") - 1;
-	zend_string *retval;
-
-	ZEND_PARSE_PARAMETERS_START(0, 1)
-		Z_PARAM_OPTIONAL
-		Z_PARAM_STRING(var, var_len)
-	ZEND_PARSE_PARAMETERS_END();
-
-	retval = strpprintf(0, "Hello %s", var);
-
-	RETURN_STR(retval);
+	prev_zend_compile_file = zend_compile_file;
+	zend_compile_file = my_extension_compile_file;
+    return SUCCESS;
 }
-/* }}}*/
 
-/* {{{ PHP_RINIT_FUNCTION */
-PHP_RINIT_FUNCTION(include_logger)
-{
-#if defined(ZTS) && defined(COMPILE_DL_INCLUDE_LOGGER)
-	ZEND_TSRMLS_CACHE_UPDATE();
-#endif
-
-	return SUCCESS;
-}
-/* }}} */
-
-/* {{{ PHP_MINFO_FUNCTION */
-PHP_MINFO_FUNCTION(include_logger)
-{
-	php_info_print_table_start();
-	php_info_print_table_header(2, "include_logger support", "enabled");
-	php_info_print_table_end();
-}
-/* }}} */
-
-/* {{{ include_logger_module_entry */
 zend_module_entry include_logger_module_entry = {
 	STANDARD_MODULE_HEADER,
-	"include_logger",					/* Extension name */
-	ext_functions,					/* zend_function_entry */
-	NULL,							/* PHP_MINIT - Module initialization */
+	"include_logger",				/* Extension name */
+	NULL,							/* zend_function_entry */
+	PHP_MINIT(include_logger),		/* PHP_MINIT - Request initialization */
 	NULL,							/* PHP_MSHUTDOWN - Module shutdown */
-	PHP_RINIT(include_logger),			/* PHP_RINIT - Request initialization */
+	NULL,							/* PHP_RINIT - Request initialization */
 	NULL,							/* PHP_RSHUTDOWN - Request shutdown */
-	PHP_MINFO(include_logger),			/* PHP_MINFO - Module info */
+	NULL,							/* PHP_MINFO - Module info */
 	PHP_INCLUDE_LOGGER_VERSION,		/* Version */
 	STANDARD_MODULE_PROPERTIES
 };
-/* }}} */
 
 #ifdef COMPILE_DL_INCLUDE_LOGGER
 # ifdef ZTS
