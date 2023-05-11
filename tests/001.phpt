@@ -6,5 +6,6 @@ include_logger
 <?php
 echo 'The extension "include_logger" is available';
 ?>
---EXPECT--
+--EXPECTF--
 The extension "include_logger" is available
+Including file: %s/001.php

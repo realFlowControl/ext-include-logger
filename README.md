@@ -19,3 +19,9 @@ This will output:
 ```sh
 Including file: Standard input code
 ```
+
+## Test
+
+```sh
+php run-tests.php -d extension=modules/include_logger.so tests
+```
