@@ -16,7 +16,7 @@ configure
 configure.ac
 configure.in
 include
-install-sh
+include_logger.dep
 libtool
 ltmain.sh
 Makefile
