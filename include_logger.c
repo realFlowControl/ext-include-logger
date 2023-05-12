@@ -8,7 +8,6 @@
 #include "Zend/zend_compile.h"
 #include "ext/standard/info.h"
 #include "php_include_logger.h"
-#include "include_logger_arginfo.h"
 
 /* For compatibility with older PHP versions */
 #ifndef ZEND_PARSE_PARAMETERS_NONE
