@@ -9,13 +9,7 @@
 #include "ext/standard/info.h"
 #include "php_include_logger.h"
 
-/* For compatibility with older PHP versions */
-#ifndef ZEND_PARSE_PARAMETERS_NONE
-#define ZEND_PARSE_PARAMETERS_NONE() \
-    ZEND_PARSE_PARAMETERS_START(0, 0) \
-    ZEND_PARSE_PARAMETERS_END()
-#endif
-
+// pointer to store previous handler
 zend_op_array *(*prev_zend_compile_file)(zend_file_handle *file_handle, int type);
 
 zend_op_array *my_extension_compile_file(zend_file_handle *file_handle, int type)
