@@ -16,17 +16,17 @@ zend_op_array *(*prev_zend_compile_file)(zend_file_handle *file_handle, int type
 
 zend_op_array *my_extension_compile_file(zend_file_handle *file_handle, int type)
 {
-	struct timespec start, end;
-	double time;
-	zend_op_array* op_array = NULL;
+    struct timespec start, end;
+    double time;
+    zend_op_array* op_array = NULL;
     char log[2048];
-	clock_gettime(CLOCK_MONOTONIC, &start);
-	op_array = prev_zend_compile_file(file_handle, type);
-	clock_gettime(CLOCK_MONOTONIC, &end);
-	time = end.tv_nsec - start.tv_nsec + (end.tv_sec - start.tv_sec) * 1000000000;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    op_array = prev_zend_compile_file(file_handle, type);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    time = end.tv_nsec - start.tv_nsec + (end.tv_sec - start.tv_sec) * 1000000000;
     snprintf(log, 2048, "compiled file '%s' in %.0f nanoseconds", op_array->filename->val, time);
     _php_error_log(0, log, NULL, NULL);
-	return op_array;
+    return op_array;
 }
 
 PHP_MINIT_FUNCTION(include_logger)
