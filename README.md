@@ -1,5 +1,7 @@
 # ext-include-logger
 
+[![Tests](https://github.com/realFlowControl/ext-include-logger/actions/workflows/test.yaml/badge.svg)](https://github.com/realFlowControl/ext-include-logger/actions/workflows/test.yaml)
+
 ## How to build
 
 ```sh
